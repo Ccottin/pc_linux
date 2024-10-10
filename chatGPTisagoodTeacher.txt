@@ -1,0 +1,95 @@
+A complex function is any function that maps complex numbers
+to complex numbers. This could be a polynomial, but it could
+also be other types of functions (like exponential, trigonometric,
+or logarithmic functions) that are extended to work with
+complex numbers.
+So, while complex polynomials are one type of complex function,
+not all complex functions are polynomials.
+
+How can a simple polynomial have several answers?
+
+A simple polynomial can have multiple solutions (also called
+"roots") depending on the degree of the polynomial. The degree
+is the highest exponent of the variable in the polynomial.
+
+For example, the quadratic polynomial x²−5x+6 has two answers,
+x=2 and x=3, because:
+x²−5x+6=(x−2)(x−3)
+
+This means that when x=2 or x=3, the polynomial equals zero.
+
+According to the Fundamental Theorem of Algebra, a polynomial
+of degree 'n' has exactly 'n' roots (solutions), though some roots
+can be repeated or be complex numbers.
+
+For example:
+
+    A degree 2 polynomial (like x²+x+1) can have up to 2 roots.
+    A degree 3 polynomial (like x³−x) can have up to 3 roots.
+
+
+What is the Stone-Weierstrass Theorem?
+
+The Stone-Weierstrass Theorem is a key result in mathematical analysis. In simple terms, it says that any continuous function on a certain kind of space (usually a closed interval or a more general compact space) can be closely approximated by polynomials.
+
+Here's a more concrete explanation:
+
+    Imagine you have a continuous function, say something like 
+    a smooth curve.
+    The theorem says that no matter how complicated this 
+    function is, you can find a polynomial (or a series of 
+    polynomials) that can get as close as you want to this 
+    function.
+
+So, even though the function might not be a polynomial itself, 
+you can always find a polynomial that behaves very similarly 
+over the interval you're interested in.
+
+This is super useful because polynomials are relatively easy to
+ work with, and the theorem guarantees that polynomials are 
+ powerful enough to approximate any continuous function.
+
+
+
+Polarity of the Discriminant
+
+The discriminant is a key part of the quadratic formula used to solve quadratic equations. For a quadratic equation of the form:
+ax²+bx+c=0
+
+The discriminant (D) is given by:
+D=b²−4ac
+
+The polarity of the discriminant refers to whether the discriminant
+is positive, zero, or negative. This polarity tells us important 
+information about the nature of the roots (solutions) of the 
+quadratic equation:
+
+    Positive Discriminant (D>0):
+        The equation has two distinct real roots.
+        This is because when D>0, you can take the square root of a 
+        positive number, leading to two different solutions.
+
+    Zero Discriminant (D=0):
+        The equation has exactly one real root, also called a repeated 
+        root or double root.
+        In this case, the quadratic touches the x-axis at just one point.
+
+    Negative Discriminant (D<0):
+        The equation has two complex conjugate roots.
+        This happens because you cannot take the square root of a 
+        negative number in the real number system, so you get imaginary
+        numbers.
+
+When is it useful to know the discriminant's polarity?
+
+    Nature of Solutions: If you want to know if your equation has real or
+     complex solutions without solving it fully, you can just check the
+     discriminant. This is especially useful in calculus, physics, or
+     engineering when you want to predict behavior without going through
+     the entire calculation.
+    Curve Analysis: In graphing, knowing whether the discriminant is
+    positive, zero, or negative helps you understand how a parabola
+    interacts with the x-axis.
+    Optimization Problems: In some optimization problems involving
+    quadratic equations, knowing the number of real roots can help
+    determine feasible solutions.
