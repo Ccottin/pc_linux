@@ -93,3 +93,12 @@ When is it useful to know the discriminant's polarity?
     Optimization Problems: In some optimization problems involving
     quadratic equations, knowing the number of real roots can help
     determine feasible solutions.
+
+Il n'est pas possible de diviser par x dans un polynome de second
+degre
+La division par x s'ecrit aussi sous la forme de (x^-1) ce qui
+n'est pas autorise dans un polynome
+" Si tu vois une expression avec 1/𝑥, comme 4+3/𝑥, ce n'est plus un
+polynôme mais une autre forme d'expression algébrique, car la division
+par 𝑥 correspond à une puissance négative (𝑥^−1), ce qui n'est
+pas autorisé dans les polynômes.

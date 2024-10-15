@@ -1,0 +1,4 @@
+Find a way if input is not valid UTF-8
+check with 
+0 = 0
+
