@@ -1,11 +1,28 @@
 use std::env;
 
 struct Term {
-    coefficient: f64,
-    exposant: i32, //if 0 == coeff * 1
-    operator: char,
-    sign: char,
+    coefficient: Option<f64>,
+    exposant: Option<i32>, //if 0 == coeff * 1
+    operator: Option<char>,
+    sign: Option<char>,
+}
 
+impl Term {
+    fn new() -> Term {
+        Term {
+            coefficient: None,
+            exposant: None,
+            operator: None,
+            sign: None,
+        }
+    }
+
+    fn erase(&mut self) {
+        self.coefficient = None;
+        self.exposant = None;
+        self.operator = None;
+        self.sign = None;
+    }
 }
 
 fn error(reason: &str) {
@@ -55,6 +72,7 @@ fn  is_sign(c: char) -> bool {
     }
     false
 }
+
 #[derive(Debug)]
 enum Possibilities {
     Digit(char),                   // ("0123456789")
@@ -66,70 +84,72 @@ enum Possibilities {
     Dot(char),                     // ('.')
 }
 
-fn  check_possibilities(checked: Possibilities, base: &String, index: usize, term: &Term)
-    -> (isize, &Term) {
+fn  check_possibilities(checked: Possibilities, base: &String, index: usize, term: &mut Term)
+    -> isize {
     match checked {
         Possibilities::Digit(c) => {
             println!("{:?}", checked);
-
+            0
         }
         Possibilities::Signs(c) => {
-
+            0
         }
         Possibilities::WhiteSpace(c) => {
-
+            0
         }
         Possibilities::Unknown(c) => {
-
+            0
         }
         Possibilities::Power(c) => {
-
+            0
         }
         Possibilities::Equal(c) => {
-
+            0
         }
         Possibilities::Dot(c) => {
-
+            0
         }
     }
 }
 
+//IDS == en fonction du retour,deep copy to_fill dans un vec et 
+//appel a la methode.erase
 fn  parser(arg: String) -> (Vec<Term>, Vec<Term>) {
 
 
     let mut left_expression: Vec<Term> = Vec::new();
     let mut right_expression: Vec<Term> = Vec::new();
-
-
+    let mut to_fill = Term::new();
+    
     for (i, item) in arg.char_indices() {
         
         if is_sign(item) {
             println!("sign");
-            check_possibilities(Possibilities::Signs(item), &arg, i);
+            check_possibilities(Possibilities::Signs(item), &arg, i, &mut to_fill);
         }
         else if item.is_numeric() {
             println!("digit");
-            check_possibilities(Possibilities::Digit(item), &arg, i);
+            check_possibilities(Possibilities::Digit(item), &arg, i, &mut to_fill);
         }
         else if item == ' ' {
             println!("espasse");
-            check_possibilities(Possibilities::WhiteSpace(item), &arg, i);
+            check_possibilities(Possibilities::WhiteSpace(item), &arg, i, &mut to_fill);
         }
         else if item == 'x' {
             println!("x");
-            check_possibilities(Possibilities::Unknown(item), &arg, i);
+            check_possibilities(Possibilities::Unknown(item), &arg, i, &mut to_fill);
         }
         else if item == '=' {
             println!("=");
-            check_possibilities(Possibilities::Equal(item), &arg, i);
+            check_possibilities(Possibilities::Equal(item), &arg, i, &mut to_fill);
         }
         else if item == '.' {
             println!(".");
-            check_possibilities(Possibilities::Dot(item), &arg, i);
+            check_possibilities(Possibilities::Dot(item), &arg, i, &mut to_fill);
         }
         else if item == '^' {
             println!("^");
-            check_possibilities(Possibilities::Power(item), &arg, i);
+            check_possibilities(Possibilities::Power(item), &arg, i, &mut to_fill);
         }
         else {
         println!("WTF");
