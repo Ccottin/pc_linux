@@ -120,40 +120,43 @@ fn  parser(arg: String) -> (Vec<Term>, Vec<Term>) {
     let mut left_expression: Vec<Term> = Vec::new();
     let mut right_expression: Vec<Term> = Vec::new();
     let mut to_fill = Term::new();
+    let mut ret = 0;
     
     for (i, item) in arg.char_indices() {
         
-        if is_sign(item) {
+        ret = if is_sign(item) {
             println!("sign");
-            check_possibilities(Possibilities::Signs(item), &arg, i, &mut to_fill);
+            check_possibilities(Possibilities::Signs(item), &arg, i, &mut to_fill)
         }
-        else if item.is_numeric() {
+        ret = else if item.is_numeric() {
             println!("digit");
-            check_possibilities(Possibilities::Digit(item), &arg, i, &mut to_fill);
+            check_possibilities(Possibilities::Digit(item), &arg, i, &mut to_fill)
         }
-        else if item == ' ' {
+        ret = else if item == ' ' {
             println!("espasse");
-            check_possibilities(Possibilities::WhiteSpace(item), &arg, i, &mut to_fill);
+            check_possibilities(Possibilities::WhiteSpace(item), &arg, i, &mut to_fill)
         }
-        else if item == 'x' {
+        ret = else if item == 'x' {
             println!("x");
-            check_possibilities(Possibilities::Unknown(item), &arg, i, &mut to_fill);
+            check_possibilities(Possibilities::Unknown(item), &arg, i, &mut to_fill)
         }
-        else if item == '=' {
+        ret = else if item == '=' {
             println!("=");
-            check_possibilities(Possibilities::Equal(item), &arg, i, &mut to_fill);
+            check_possibilities(Possibilities::Equal(item), &arg, i, &mut to_fill)
         }
-        else if item == '.' {
+        ret = else if item == '.' {
             println!(".");
-            check_possibilities(Possibilities::Dot(item), &arg, i, &mut to_fill);
+            check_possibilities(Possibilities::Dot(item), &arg, i, &mut to_fill)
         }
-        else if item == '^' {
+        ret = else if item == '^' {
             println!("^");
-            check_possibilities(Possibilities::Power(item), &arg, i, &mut to_fill);
+            check_possibilities(Possibilities::Power(item), &arg, i, &mut to_fill)
         }
-        else {
+        ret = else {
         println!("WTF");
+        -1
         }
+        //evaluer si ret = -1 ou 1
     }
     (left_expression, right_expression)
 }
