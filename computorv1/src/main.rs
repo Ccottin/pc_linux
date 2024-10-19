@@ -93,75 +93,69 @@ enum Possibilities {
     Dot(char),                     // ('.')
 }
 
-fn  check_possibilities(checked: Possibilities, base: &[u8], index: &mut usize, term: &mut Term, nb_elem: isize)
-    -> isize {
-    match checked {
-        Possibilities::Digit(c) => {
-            match term.coefficient {
-                Some(i) => {
-                    if base[index - 1] == b' ' && term.coefficient != None {
-                        return -1
-                    }
-                    else if base[index - 1] == b'.' {
-                        term.coefficient = Some(i + c.to_digit(10).unwrap() as f64 / 10.0);
-                    }  
-                    else {
-                        term.coefficient = Some(i * 10.0);
-                        term.coefficient = Some(i * c.to_digit(10).unwrap() as f64);
-                    }
-                }
-                None => term.coefficient = Some(c.to_digit(10).unwrap() as f64),
+fn  handle_digits(c: char, base: &[u8], index: usize, term: &mut Term)
+    -> (isize, String) {
+    match term.coefficient {
+        Some(i) => {
+             if base[index - 1] == b' ' && term.coefficient != None {
+                return (-1, String::from("two consecutive numbers."))
             }
-            println!("{:?}", term.coefficient);
-            0
-        }
-        Possibilities::Signs(c) => {
-
-            0
-        }
-        Possibilities::WhiteSpace(c) => 0,
-        Possibilities::Unknown(c) => {
-            let search = index - 1;
-            while search >= 0 && base[search] == b' ' {
-                search -= 1;
-            }
-            if is_sign(base[search] as char) || search == 0 || base[search] == '=' {
-                return 0
-            -1
+            else if base[index - 1] == b'.' {
+                term.coefficient = Some(i + c.to_digit(10).unwrap() as f64 / 10.0);
+            }  
+            else {
+                term.coefficient = Some(i * 10.0);
+                term.coefficient = Some(i * c.to_digit(10).unwrap() as f64);
             }
         }
-        Possibilities::Power(c) => {
-            let search = index - 1;
-            while search >= 0 && base[search] != b'x' && base[search] == b' ' {
-                search -= 1;
-            }
-            if base[search] == b'x' {
-                return 0
-            }
-            search = index + 1;
-            while search <= base.len() && base[search] == b' ' {
-                search += 1;
-            }
-            if !is_sign(char(base[search + 1])) || base[search + 1] != b' ' {
-                return -1
-            }
-            if base[search] != b'0' || base[search] != b'1' || base[search] == b'2' {
-                term.exposant = Some((base[search]).to_digit(10).unwrap as int32);
-                *index = search + 1;
-                return 0
-            }
-            -1
-        }
-        Possibilities::Equal(c) => 2,
-        Possibilities::Dot(c) => {
-            if !(is_numeric(base[index - 1])
-                && is_numeric(base[index + 1])) {
-                    return -1
-                }
-            0
-        }
+        None => term.coefficient = Some(c.to_digit(10).unwrap() as f64),
     }
+    println!("{:?}", term.coefficient);
+    (0, String::new())
 }
+
+fn  handle_signs(c: char, base: &[u8], index: &mut usize, term: &mut Term, nb_elem: isize)
+    -> (isize, String) {
+    (0, String::new())
+}
+
+fn  handle_unknown(base: &[u8], index: usize)
+    -> (isize, String) {
+    let mut search = index - 1;
+    while search >= 0 && base[search] == b' ' {
+        search -= 1;
+    }
+    if is_sign(base[search] as char) || search == 0 || base[search] == b'=' {
+        return (0, String::new())
+    }
+    (-1, String::from("Unvalid x syntax."))
+}
+
+fn  handle_power(base: &[u8], index: &mut usize, term: &mut Term)
+    -> (isize, String) {
+    let mut search = *index - 1;
+    while search >= 0 && base[search] != b'x' && base[search] == b' ' {
+        search -= 1;
+    }
+    if !base[search] == b'x' {
+        return (-1, String::from("power symbol should be only after a x"));
+    }
+    search = *index + 1;
+    while search <= base.len() && base[search] == b' ' {
+        search += 1;
+    }
+    // if is_sign(base[search + 1] as char) || base[search + 1] != b' ' {
+    //     return (-1, String::from("please provide a single number as power."));
+    // }
+    if is_numeric(base[search]) {
+        let c1 = base[search] as char;
+        term.exposant = Some(c1.to_digit(10).unwrap() as i32);
+        *index = search + 1;
+        return (0, String::new())
+    }
+    (-1, String::from("unvalid power operand."))
+}
+
 
 //IDS == en fonction du retour,deep copy to_fill dans un vec et 
 //appel a la methode.erase
@@ -171,47 +165,55 @@ fn  parser(arg: String) -> (Vec<Term>, Vec<Term>) {
     let mut left_expression: Vec<Term> = Vec::new();
     let mut right_expression: Vec<Term> = Vec::new();
     let mut to_fill = Term::new();
-    let mut ret = 0;
+    let mut ret = (0, String::new());
     let mut nb_elem = 0;
     
     for (mut i, item) in arg.char_indices() {
         
-        if is_sign(item) {
-            println!("sign");
-            ret = check_possibilities(Possibilities::Signs(item), arg.as_bytes(), &mut i, &mut to_fill, nb_elem)
-        }
-        else if item.is_numeric() {
+        if item.is_numeric() {
             println!("digit");
-            ret = check_possibilities(Possibilities::Digit(item), arg.as_bytes(), &mut i, &mut to_fill, nb_elem)
+            ret = handle_digits(item, arg.as_bytes(), i, &mut to_fill)
+        }
+        else if is_sign(item) {
+            println!("sign");
+            ret = handle_signs(item, arg.as_bytes(), &mut i, &mut to_fill, nb_elem)
         }
         else if item == ' ' {
             println!("espasse");
-            ret = check_possibilities(Possibilities::WhiteSpace(item), arg.as_bytes(), &mut i, &mut to_fill, nb_elem)
+            ret = (0, String::new());
         }
         else if item == 'x' {
             println!("x");
-            ret = check_possibilities(Possibilities::Unknown(item), arg.as_bytes(), &mut i, &mut to_fill, nb_elem)
+            ret = handle_unknown(arg.as_bytes(), i)
         }
         else if item == '=' {
             println!("=");
-            ret = check_possibilities(Possibilities::Equal(item), arg.as_bytes(), &mut i, &mut to_fill, nb_elem)
-        }
-        else if item == '.' {
-            println!(".");
-            ret = check_possibilities(Possibilities::Dot(item), arg.as_bytes(), &mut i, &mut to_fill, nb_elem)
+            if nb_elem == 0 {
+                ret = (-1, String::from("no left-side term."));
+            }
+            ret.0 = 2;
         }
         else if item == '^' {
             println!("^");
-            ret = check_possibilities(Possibilities::Power(item), arg.as_bytes(), &mut i, &mut to_fill, nb_elem)
+            ret = handle_power(arg.as_bytes(), &mut i, &mut to_fill)
         }
+        else if item == '.' {
+            println!(".");
+            if !(is_numeric(arg.as_bytes()[i - 1]) && is_numeric(arg.as_bytes()[i + 1])) {
+                ret = (-1, String::from("unvalid dot."));
+            }
+        }
+       
         else {
         println!("WTF");
-        ret = -1;
+        ret = (-1, String::from("WTF"));
         }
+
         println!("after loop {}, truct = {:?}", i, to_fill);
-        if ret == -1 {
-            println!("error");
+        if ret.0 == -1 {
+            println!("error : {}", ret.1);
         }
+        ret.0 = 0;
         //evaluer si ret = -1 ou 1
     }
     (left_expression, right_expression)
