@@ -22,7 +22,6 @@ impl Term {
         self.coefficient = None;
         self.exposant = None;
         self.operator = None;
-        self.sign = None;
     }
 }
 
@@ -64,6 +63,7 @@ fn args_checker(args: &[String]) -> (i32, String) {
     if equal != 1 {
         return (1, "Unvalid equality sign".to_string())
     }
+    arg = arg.trim_start();
     (0, arg)
 }
 
@@ -114,8 +114,45 @@ fn  handle_digits(c: char, base: &[u8], index: usize, term: &mut Term)
     (0, String::new())
 }
 
+fn next_char(base: &[u8], index: mut i32) -> u8 {
+    while base[index] == b' ' {
+        index = index + 1;
+    }
+    return base[index]
+}
+
+fn prev_char(base: &[u8], index: mut i32) -> u8 {
+    while base[index] == b' ' {
+        index = index - 1;
+    }
+    if index == 0 {
+        return b'E'
+    }
+    return base[index]
+}
+
 fn  handle_signs(c: char, base: &[u8], index: &mut usize, term: &mut Term, nb_elem: isize)
     -> (isize, String) {
+        let mut search = index + 1;
+
+        if index == 0 && (c == '*' || c == '/') {
+            return (-1, String::from("unvalid first operation."))
+        }
+        if (c == '-') {
+            term.operator = Some('-');
+
+        }
+
+        // si on multiplie x, il ne se passe rien
+        if c == '*' && is_numeric(prev_char(base, index)) && next_char(base, index) == b'x' {
+            return (0, String::new())
+        }
+        if c == '/' && is_numeric(prev_char(base, index)) && is_numeric(next_char(base, index)) {
+            if (term.coefficient != None) {
+                term.coefficient = Some(term.coefficient / next_char(base, index).to_digit(10).unwrap() as f64)
+                    //on en est là, push en PANIK
+            }
+
     (0, String::new())
 }
 
