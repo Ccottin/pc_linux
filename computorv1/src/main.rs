@@ -1,10 +1,9 @@
 use std::env;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 struct Term {
     coefficient: Option<f64>,
-    exposant: Option<i32>, //if 0 == coeff * 1
-  //  operator: Option<char>,
+    exposant: Option<isize>, //if 0 == coeff * 1
     sign: Option<char>,
     x: bool,
 }
@@ -14,7 +13,6 @@ impl Term {
         Term {
             coefficient: None,
             exposant: None,
-          //  operator: None,
             sign: None,
             x: false,
         }
@@ -23,7 +21,6 @@ impl Term {
     fn erase(&mut self) {
         self.coefficient = None;
         self.exposant = None;
-      //  self.operator = None;
         self.sign = None;
         self.x = false;
     }
@@ -38,11 +35,26 @@ fn is_valid_char(arg: &String) -> bool {
         [b'.', b'+', b'-', b'*', b'=', b'x', b'^', b' ', b'/'];
 
     for b in arg.as_bytes() {
-        if !valid_chars.contains(&b) && !b.is_ascii_digit() {
+        if !valid_chars.contains(b) && !b.is_ascii_digit() {        // digit => 0..9
             return false
         }
     }
     true
+}
+
+fn  is_sign(c: char) -> bool {
+    if c == '+' || c == '-' || c == '*' || c == '/' {
+        return true
+    }
+    false
+}
+
+fn  is_numeric(c: u8) -> bool {
+    if c == b'0' || c == b'1' || c == b'2' || c == b'3' || c == b'4'
+        || c == b'5' || c == b'6' || c == b'7' || c == b'8' || c == b'9' {
+        return true
+    }
+    false
 }
 
 fn args_checker(args: &[String]) -> (i32, String) {
@@ -50,6 +62,7 @@ fn args_checker(args: &[String]) -> (i32, String) {
     let mut equal = 0;
     let mut arg = String::new();
 
+    // get a string with all input strings
     for s in args {
         arg = arg + s;
     }
@@ -71,31 +84,6 @@ fn args_checker(args: &[String]) -> (i32, String) {
     (0, arg)
 }
 
-fn  is_sign(c: char) -> bool {
-    if c == '+' || c == '-' || c == '*' || c == '/' {
-        return true
-    }
-    false
-}
-
-fn  is_numeric(c: u8) -> bool {
-    if c == b'0' || c == b'1' || c == b'2' || c == b'3' || c == b'4'
-        || c == b'5' || c == b'6' || c == b'7' || c == b'8' || c == b'9' {
-        return true
-    }
-    false
-}
-
-#[derive(Debug)]
-enum Possibilities {
-    Digit(char),                   // ("0123456789")
-    Signs(char),                   // ("+-*/")
-    WhiteSpace(char),              // (' ')
-    Unknown(char),                 // ('x')
-    Power(char),                   // ('^')
-    Equal(char),                   // ('=')
-    Dot(char),                     // ('.')
-}
 
 fn  get_nb_str(base: &[u8], index: &mut usize) -> String {
     let mut ret = String::new();
@@ -110,6 +98,7 @@ fn  get_nb_str(base: &[u8], index: &mut usize) -> String {
             dot = true;
         }
     }
+    println!( "{}" ,ret);
     ret
 }
 
@@ -124,25 +113,22 @@ fn  handle_digits(base: &[u8], index: &mut usize, term: &mut Term)
 }
 
 fn next_char(base: &[u8], index: usize) -> u8 {
-    let mut i = index;
+    let mut i = index + 1;
     while base[i] == b' ' {
         i = i + 1;
     }
-    return base[i]
+    base[i]
 }
 
 fn prev_char(base: &[u8], index: usize) -> u8 {
-    let mut i = index;
-    while base[i] == b' ' {
+    let mut i = index - 1;
+    while base[i] == b' ' && i != 0 {
         i = i - 1;
     }
-    if i == 0 {
-        return b'E'
-    }
-    return base[i]
+    base[i]
 }
 
-fn  handle_signs(c: char, base: &[u8], index: &mut usize, term: &mut Term, nb_elem: isize)
+fn  handle_signs(c: char, base: &[u8], index: &mut usize, term: &mut Term)
     -> (isize, String) {
     if *index == 0 && (c == '*' || c == '/') {
         return (-1, String::from("unvalid first operation."))
@@ -152,9 +138,8 @@ fn  handle_signs(c: char, base: &[u8], index: &mut usize, term: &mut Term, nb_el
         '-' => return (2, String::new()),
         '+' => return (1, String::new()),
         '*' => {
-            // si on multiplie x, il ne se passe rien
-            if is_numeric(prev_char(base, *index)) && next_char(base, *index) == b'x' ||
-                is_numeric(next_char(base, *index)) && prev_char(base, *index) == b'x'{
+            if (is_numeric(prev_char(base, *index)) && next_char(base, *index) == b'x') ||
+                (is_numeric(next_char(base, *index)) && prev_char(base, *index) == b'x') {
                 return (0, String::new())
             }
             else if is_numeric(prev_char(base, *index)) && is_numeric(next_char(base, *index)) {
@@ -163,6 +148,7 @@ fn  handle_signs(c: char, base: &[u8], index: &mut usize, term: &mut Term, nb_el
                     * get_nb_str(base, index).parse::<f64>().unwrap());
             }
             else {
+                // println!("prev char = {}, next char = {}", prev_char(base, *index) as char, next_char(base, *index) as char);
                 return (-1, String::from("Please provide mutiplication with x or numbers only."))
             }
         }
@@ -186,14 +172,12 @@ fn  handle_signs(c: char, base: &[u8], index: &mut usize, term: &mut Term, nb_el
 fn  handle_unknown(term: &mut Term, base: &[u8], index: usize)
     -> (isize, String) {
     let mut search = index - 1;
-    while search >= 0 && base[search] == b' ' {
+    while search != 0 && base[search] == b' ' {
         search -= 1;
     }
-    if is_sign(base[search] as char) || search == 0 || base[search] == b'=' {
-        return (0, String::new())
-    }
-    if term.x == false {
-        term.x == true;
+    if (is_sign(base[search] as char) || search == 0 || base[search] == b'=')
+        && term.x == false {
+        term.x = true;
         return (0, String::new())
     }
     (-1, String::from("Unvalid x syntax."))
@@ -201,24 +185,16 @@ fn  handle_unknown(term: &mut Term, base: &[u8], index: usize)
 
 fn  handle_power(base: &[u8], index: &mut usize, term: &mut Term)
     -> (isize, String) {
-    let mut search = *index - 1;
-    while search >= 0 && base[search] != b'x' && base[search] == b' ' {
-        search -= 1;
-    }
-    if !base[search] == b'x' {
+    if prev_char(base, *index) != b'x' {
         return (-1, String::from("power symbol should be only after a x"));
     }
-    search = *index + 1;
-    while search <= base.len() && base[search] == b' ' {
-        search += 1;
-    }
-    // if is_sign(base[search + 1] as char) || base[search + 1] != b' ' {
-    //     return (-1, String::from("please provide a single number as power."));
-    // }
-    if is_numeric(base[search]) {
-        let c1 = base[search] as char;
-        term.exposant = Some(c1.to_digit(10).unwrap() as i32);
-        *index = search + 1;
+    if is_numeric(next_char(base, *index)) {
+        let nb = get_nb_str(base, index);
+        if nb.find('.') != None {
+            return (-1, "powers should be whole numbers".to_string())
+        }
+        println!("nbstring is {}", nb);
+        term.exposant = Some(nb.parse::<isize>().unwrap());
         return (0, String::new())
     }
     (-1, String::from("unvalid power operand."))
@@ -234,17 +210,17 @@ fn  add_to_expression(expression: &mut Vec<Term>, to_fill: &mut Term, nb_elem: &
     if to_fill.exposant == None {
         to_fill.exposant = Some(0);
     }
-    expression.push(to_fill);
+    expression.push(to_fill.clone());
     to_fill.erase();
     *nb_elem = *nb_elem + 1;
 }
 
 //IDS == en fonction du retour,deep copy to_fill dans un vec et 
 //appel a la methode.erase
-fn  parser(arg: String) -> (isize, (Vec<Term>, Vec<Term>)) {
+fn  parser(arg: String) -> (isize, [Vec<Term>; 2]) {
 
-    let mut polynomial: (Vec<Term> , Vec<Term>) = (Vec::new(), Vec::new());
-    let mut side = 0;   //0 = left, 1 = right // this dont work, jjust go eat
+    let mut polynomial: [Vec<Term>; 2] = [Vec::new(), Vec::new()];
+    let mut side = 0;   //0 = left, 1 = right
     let mut to_fill = Term::new();
     let mut ret = (0, String::new());
     let mut nb_elem = 0;
@@ -257,7 +233,7 @@ fn  parser(arg: String) -> (isize, (Vec<Term>, Vec<Term>)) {
         }
         else if is_sign(item) {
             println!("sign");
-            ret = handle_signs(item, arg.as_bytes(), &mut i, &mut to_fill, nb_elem)
+            ret = handle_signs(item, arg.as_bytes(), &mut i, &mut to_fill)
         }
         else if item == ' ' {
             println!("espasse");
@@ -298,19 +274,23 @@ fn  parser(arg: String) -> (isize, (Vec<Term>, Vec<Term>)) {
                 return (-1, polynomial)
             }
             1 => {
-                polynomial.side.push(add_to_expression(&mut to_fill));
+                add_to_expression(&mut polynomial[side], &mut to_fill, &mut nb_elem);
                 to_fill.sign = Some('+');
             }
             2 => {
-                polynomial.side.push(add_to_expression(&mut to_fill));
+                add_to_expression(&mut polynomial[side], &mut to_fill, &mut nb_elem);
                 to_fill.sign = Some('-');
             }
-            3 => side = 1,
+            3 => {
+                add_to_expression(&mut polynomial[side], &mut to_fill, &mut nb_elem);
+                side = 1;
+            }
             _ => (),
         }
         ret.0 = 0;
     }
-    println!("{:?} = {:?}", polynomial.0, polynomial.1);
+    add_to_expression(&mut polynomial[side], &mut to_fill, &mut nb_elem);
+    println!("{:?} = {:?}", polynomial[0], polynomial[1]);
     (0, polynomial)
 }
 
