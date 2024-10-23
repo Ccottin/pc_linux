@@ -190,19 +190,22 @@ fn  handle_signs(c: u8, base: &[u8], index: &mut usize, term: &mut MutTerm)
                     * get_nb_str(base, index).parse::<f64>().unwrap());
             }
             else {
-                return (-1, String::from("Please provide mutiplication with x or numbers only."))
+                return (-1, String::from("please provide mutiplication with x or numbers only."))
             }
         }
         b'/' => {
             if is_numeric(prev_char(base, *index)) && is_numeric(next_char(base, *index)) {
                 if term.coefficient != None {
                     *index = *index + 1;
-                    term.coefficient = Some(term.coefficient.unwrap()
-                        / get_nb_str(base, index).parse::<f64>().unwrap());
+                    let temp = get_nb_str(base, index).parse::<f64>().unwrap();
+                    if temp == 0.0 {
+                        return (-1, String::from("division per zero is forbidden."))
+                    }
+                    term.coefficient = Some(term.coefficient.unwrap() / temp);
                 }
             }
             else {
-                return (-1, String::from("Please provide divisions with numbers only."))
+                return (-1, String::from("please provide divisions with numbers only."))
             }
         }
         other => println!("What? I just got {}", other),
@@ -217,7 +220,7 @@ fn  handle_unknown(term: &mut MutTerm, base: &[u8], index: usize)
         term.x = true;
         return (0, String::new())
     }
-    (-1, String::from("Unvalid x syntax."))
+    (-1, String::from("unvalid x syntax."))
 }
 
 fn  handle_power(base: &[u8], index: &mut usize, term: &mut MutTerm)
@@ -253,8 +256,6 @@ fn  add_to_expression(expression: &mut Vec<Term>, term: &mut MutTerm) {
     term.erase();
 }
 
-//IDS == en fonction du retour,deep copy term dans un vec et 
-//appel a la methode.erase
 fn  parser(args: String) -> (isize, [Vec<Term>; 2]) {
 
     let mut polynomial: [Vec<Term>; 2] = [Vec::new(), Vec::new()];
@@ -299,7 +300,6 @@ fn  parser(args: String) -> (isize, [Vec<Term>; 2]) {
         println!("WTF");
         ret = (-1, String::from("WTF"));
         }
-        //evaluer si ret = -1 ou 1 ou 2 ou 3
 
         println!("after loop {}, struct = {:?} \n", i, term);
         match ret.0 {
