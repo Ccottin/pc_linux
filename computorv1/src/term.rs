@@ -1,8 +1,8 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Term {
     pub coefficient: f64,
     pub exposant: isize, //if 0 == coeff * 1
-    pub sign: char,
+    pub sign: f64,
     pub x: bool,
 }
 
@@ -21,7 +21,7 @@ impl Term {
 pub struct MutTerm {
     pub coefficient: Option<f64>,
     pub exposant: Option<isize>, //if 0 == coeff * 1
-    pub sign: Option<char>,
+    pub sign: Option<f64>,
     pub x: bool,
 }
 

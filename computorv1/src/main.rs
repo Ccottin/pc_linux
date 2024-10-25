@@ -1,8 +1,8 @@
 use std::env;
 
+mod equation_solver;
 mod input_handler;
 mod term;
-//a test si tu mets un mod term ici a la racine si tu peux y acceder dans input handler
 
 fn error(reason: &str) {
     println!("Error: {reason}");
@@ -20,11 +20,13 @@ fn main() {
         error(&arg.1);
         return ;
     }
-    let temp = input_handler::parser::parser(arg.1);
-    if temp.0 == -1 {
-        error(&temp.2);
+    let polynomial = input_handler::parser::parser(arg.1);
+    if polynomial.0 == -1 {
+        error(&polynomial.2);
         return ;
     }
+
+    equation_solver::solve_equation(polynomial.1);
 
     //Note that std::env::args will panic if any argument contains
     //invalid Unicode.

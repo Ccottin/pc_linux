@@ -49,7 +49,7 @@ fn handle_division(base: &[u8], index: &mut usize, term: &mut MutTerm) -> (isize
     if next_char(base, *index) == b'x' {
         return (
             -1,
-            "cannot solve division per x et donne une bonne explication".to_string(),
+            "division per x is forbidden".to_string(),
         );
     }
     if (is_numeric(prev_char(base, *index)) || prev_char(base, *index) == b'x')
@@ -81,11 +81,11 @@ fn handle_signs(c: u8, base: &[u8], index: &mut usize, term: &mut MutTerm) -> (i
     if *index == 0 || prev_char(base, *index) == b'=' {
         match c {
             b'-' => {
-                term.sign = Some('-');
+                term.sign = Some(-1.0);
                 return (0, String::new());
             }
             b'+' => {
-                term.sign = Some('+');
+                term.sign = Some(1.0);
                 return (0, String::new());
             }
             _ => return (-1, "unvalid first operation.".to_string()),
@@ -149,7 +149,7 @@ fn handle_power(base: &[u8], index: &mut usize, term: &mut MutTerm) -> (isize, S
 
 fn add_to_expression(expression: &mut Vec<Term>, term: &mut MutTerm) {
     if term.sign == None {
-        term.sign = Some('+');
+        term.sign = Some(1.0);
     }
     if term.coefficient == None {
         term.coefficient = Some(1.0);
@@ -195,11 +195,11 @@ pub fn parser(args: String) -> (isize, [Vec<Term>; 2], String) {
             -1 => return (-1, polynomial, ret.1),
             1 => {
                 add_to_expression(&mut polynomial[side], &mut term);
-                term.sign = Some('+');
+                term.sign = Some(1.0);
             }
             2 => {
                 add_to_expression(&mut polynomial[side], &mut term);
-                term.sign = Some('-');
+                term.sign = Some(-1.0);
             }
             3 => {
                 add_to_expression(&mut polynomial[side], &mut term);
@@ -211,6 +211,5 @@ pub fn parser(args: String) -> (isize, [Vec<Term>; 2], String) {
         i += 1;
     }
     add_to_expression(&mut polynomial[side], &mut term);
-    println!("{:?} \n=\n {:?}", polynomial[0], polynomial[1]);
     (0, polynomial, "".to_string())
 }
