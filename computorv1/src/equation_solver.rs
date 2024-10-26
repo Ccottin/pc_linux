@@ -2,29 +2,39 @@ use crate::term::Term;
 
 //a quick reminder : 34 * x ^ 0 = 34 * 1 = 34. The opposite works as well (;
 
-
+fn  search_exposant(to_search: Vec<Term>, to_find: isize) -> isize {
+    for (i, item) in to_search.iter().enumerate() {
+        if item.exposant == to_find {
+            return itry_into().unwrap(); ;
+        }
+    }
+    return -1;
+}
 
 fn      reduce_equation(polynomial: [Vec<Term>; 2]) {
-    let mut reduced_form: Vec<Term> = polynomial[0].to_vec();
+    let mut reduced_form: Vec<Term>; 
     let mut to_push: Term;
+    let mut size = 0;
+
 
     //first, lets reduce left-handed side.
     //we ned to copy vec into a temp bcs rust will not allow mutable and imuable ref at same time
-    //fuck it does not work
-    //hellllllllllllllx
-    for (mut i, mut item) in reduced_form.iter_mut().enumerate() {
-        let find = i + 1;
-        let mut temp = reduced_form.clone();
-        while find < reduced_form.len() {
-            if item.exposant == temp[i].exposant {
-                temp[i].coefficient *= temp[i].sign;
-                item.coefficient += temp[i].coefficient;
-                reduced_form.swap_remove(i);
-            } else {
-                i += 1;
-            }
-            
+    for (mut i, mut item) in polynomial[0].iter().enumerate() {
+        let val = search_exposant(reduced_form, polynomial[0][i].exposant);
+        if size > 0 && val > -1 {
+            reduced_form[val].coefficient += polynomial[0][i].coefficient;
+            reduced_form[val].sign *= sign;
+        } else {
+            to_push = item.clone();
+            reduced_form.push(to_push);
         }
+    
+        // for part two
+
+        // temp[i].coefficient *= temp[i].sign;
+        // item.coefficient += temp[i].coefficient;
+        // reduced_form.swap_remove(i);
+        
     }
 
     println!("test one = {:?}", reduced_form);
