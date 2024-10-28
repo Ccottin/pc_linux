@@ -21,4 +21,15 @@ pub fn  print_reduced_form(reduced_form: &Vec<Term>) {
 
 pub fn  print_polynomial_degree(degree: isize) {
     println!("Polynomial degree : {}", degree);
+    if degree > 2 {
+        println!("The polynomial degree is strictly greater than 2, I can't solve.");
+    }
+}
+
+pub fn  one_solution(solution: f64) {
+    println!("The solution is:\n{}", solution.to_string());
+}
+
+pub fn  print_discriminant(discriminant: f64) {
+    //to late
 }

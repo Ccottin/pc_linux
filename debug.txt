@@ -8,3 +8,5 @@ check with
 do some hardcore parsing tests; like rolling your heand on the clavier (but only with permitted chars); or get a generator of randoms strings withs alloweds chars
 try with lots of lenght
 try with overflows
+
+X ^ 2 = X ^ 2

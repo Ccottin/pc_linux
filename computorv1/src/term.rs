@@ -13,6 +13,13 @@ impl Term {
             x: origin.x,
         }
     }
+    pub fn add(exposant: isize, x: bool) -> Term {
+        Term {
+            coefficient: 0.0,
+            exposant: exposant,
+            x: x,
+        }
+    }
 }
 
 #[derive(Debug)]
