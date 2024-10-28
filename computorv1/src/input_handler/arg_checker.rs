@@ -1,5 +1,5 @@
 fn is_valid_char(arg: &String) -> bool {
-    let valid_chars: [u8; 9] = [b'.', b'+', b'-', b'*', b'=', b'x', b'^', b' ', b'/'];
+    let valid_chars: [u8; 9] = [b'.', b'+', b'-', b'*', b'=', b'X', b'^', b' ', b'/'];
 
     for b in arg.as_bytes() {
         if !valid_chars.contains(b) && !b.is_ascii_digit() {

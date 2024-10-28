@@ -22,8 +22,8 @@ fn handle_digits(base: &[u8], index: &mut usize, term: &mut MutTerm) -> (isize, 
 //------------------**************------------------//
 
 fn handle_multiplication(base: &[u8], index: &mut usize, term: &mut MutTerm) -> (isize, String) {
-    if (is_numeric(prev_char(base, *index)) && next_char(base, *index) == b'x')
-        || (is_numeric(next_char(base, *index)) && prev_char(base, *index) == b'x')
+    if (is_numeric(prev_char(base, *index)) && next_char(base, *index) == b'X')
+        || (is_numeric(next_char(base, *index)) && prev_char(base, *index) == b'X')
     {
         return (0, String::new());
     } else if is_numeric(prev_char(base, *index)) && is_numeric(next_char(base, *index)) {
@@ -46,13 +46,13 @@ fn handle_multiplication(base: &[u8], index: &mut usize, term: &mut MutTerm) -> 
 }
 
 fn handle_division(base: &[u8], index: &mut usize, term: &mut MutTerm) -> (isize, String) {
-    if next_char(base, *index) == b'x' {
+    if next_char(base, *index) == b'X' {
         return (
             -1,
             "division per x is forbidden".to_string(),
         );
     }
-    if (is_numeric(prev_char(base, *index)) || prev_char(base, *index) == b'x')
+    if (is_numeric(prev_char(base, *index)) || prev_char(base, *index) == b'X')
         && is_numeric(next_char(base, *index))
     {
         *index += 1;
@@ -92,7 +92,7 @@ fn handle_signs(c: u8, base: &[u8], index: &mut usize, term: &mut MutTerm) -> (i
         }
     }
 
-    if (!is_numeric(prev_char(base, *index)) && prev_char(base, *index) != b'x')
+    if (!is_numeric(prev_char(base, *index)) && prev_char(base, *index) != b'X')
         || *index + 1 == base.len()
     {
         println!("{}, {}", prev_char(base, *index) as char, base[*index] as char);
@@ -128,7 +128,7 @@ fn handle_unknown(term: &mut MutTerm, base: &[u8], index: usize) -> (isize, Stri
 //------------------**************------------------//
 
 fn handle_power(base: &[u8], index: &mut usize, term: &mut MutTerm) -> (isize, String) {
-    if prev_char(base, *index) != b'x' {
+    if prev_char(base, *index) != b'X' {
         return (-1, "power symbol should be only after a x".to_string());
     }
     if is_numeric(next_char(base, *index)) {
@@ -148,14 +148,17 @@ fn handle_power(base: &[u8], index: &mut usize, term: &mut MutTerm) -> (isize, S
 //------------------**************------------------//
 
 fn add_to_expression(expression: &mut Vec<Term>, term: &mut MutTerm) {
-    if term.sign == None {
-        term.sign = Some(1.0);
-    }
     if term.coefficient == None {
         term.coefficient = Some(1.0);
     }
-    if term.exposant == None {
+    if term.sign != None {
+        term.coefficient = Some(term.coefficient.unwrap() * term.sign.unwrap());
+    }
+    if term.exposant == None && term.x == false {
         term.exposant = Some(0);
+    }
+    else if term.exposant == None && term.x == true {
+        term.exposant = Some(1);
     }
     expression.push(Term::new(term));
     term.erase();
@@ -175,7 +178,7 @@ pub fn parser(args: String) -> (isize, [Vec<Term>; 2], String) {
             ret = handle_digits(arg, &mut i, &mut term)
         } else if is_sign(arg[i]) {
             ret = handle_signs(arg[i], arg, &mut i, &mut term)
-        } else if arg[i] == b'x' {
+        } else if arg[i] == b'X' {
             ret = handle_unknown(&mut term, arg, i)
         } else if arg[i] == b'^' {
             ret = handle_power(arg, &mut i, &mut term)

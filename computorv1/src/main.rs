@@ -2,6 +2,7 @@ use std::env;
 
 mod equation_solver;
 mod input_handler;
+mod print_results;
 mod term;
 
 fn error(reason: &str) {
