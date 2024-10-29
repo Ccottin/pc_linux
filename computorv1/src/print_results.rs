@@ -30,6 +30,14 @@ pub fn  one_solution(solution: f64) {
     println!("The solution is:\n{}", solution.to_string());
 }
 
-pub fn  print_discriminant(discriminant: f64) {
-    //to late
+pub fn  print_discriminant(discriminant: isize) {
+    if discriminant < 0 {
+        println!("Discriminant is strictly negative, no real solution found. Complex solutions are:");
+    }
+    else if discriminant == 0 {
+        println!("Discriminant is null, the solution (double root) is :");
+    }
+    else {
+        println!("Discriminant is strictly positive, the two solutions are:");
+    }
 }
