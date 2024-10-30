@@ -26,6 +26,14 @@ pub fn  print_polynomial_degree(degree: isize) {
     }
 }
 
+pub fn  double_root(solution: f64) {
+    println!("{}", solution);
+}
+
+pub fn  two_solutions(solution: (f64, f64)) {
+    println!("{}\n{}", solution.0, solution.1);
+}
+
 pub fn  one_solution(solution: f64) {
     println!("The solution is:\n{}", solution.to_string());
 }
