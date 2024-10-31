@@ -26,11 +26,15 @@ pub fn  print_polynomial_degree(degree: isize) {
     }
 }
 
-pub fn  double_root(solution: f64) {
-    println!("{}", solution);
+pub fn  reals_solutions(solution: (f64, f64)) {
+    if solution.0 == solution.1 {
+        println!("{}", solution.0);
+    } else {
+    println!("{}\n{}", solution.0, solution.1);
+    }
 }
 
-pub fn  two_solutions(solution: (f64, f64)) {
+pub fn  unreals_solutions(solution: (String, String)) {
     println!("{}\n{}", solution.0, solution.1);
 }
 
