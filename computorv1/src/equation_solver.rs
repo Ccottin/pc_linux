@@ -4,7 +4,6 @@ use crate::term::Term;
 mod equation_reducer;
 mod quadratic_formula;
 
-//should i do a mod just for outputs?
 //a quick reminder : 34 * x ^ 0 = 34 * 1 = 34. The opposite works as well (;
 // although, 34 * x ^ 1 = 34 * x
 
@@ -30,23 +29,21 @@ fn  add_missing_values(r_polynomial: &mut Vec<Term>) {
         }
     }
     if !zero {
-        r_polynomial.insert(0, Term::add(0, false));
+        r_polynomial.insert(0, Term::add(0));
     }
     if !one {
-        r_polynomial.insert(1, Term::add(1, true));
+        r_polynomial.insert(1, Term::add(1));
     }
 }
 
 pub fn  solve_equation(polynomial: [Vec<Term>; 2]) {
     let mut r_polynomial: Vec<Term>;
-    let discriminant: f64;
     let degree: isize;
 
-    println!("Starting to solve {:?} = {:?}", polynomial[0], polynomial[1]);
+    // println!("Starting to solve {:?} = {:?}", polynomial[0], polynomial[1]);
     r_polynomial = equation_reducer::reduce_equation(polynomial);
     degree = r_polynomial.last().unwrap().exposant;
     print_results::print_polynomial_degree(degree);
-    println!("Reduced = {:?}", r_polynomial);
 
 
     match degree {
@@ -56,7 +53,6 @@ pub fn  solve_equation(polynomial: [Vec<Term>; 2]) {
             if r_polynomial.len() < 3 {
                 add_missing_values(&mut r_polynomial);
             }
-            println!("en entree = {:?}", r_polynomial);
             quadratic_formula::use_quadratic_formula(r_polynomial[2].coefficient, r_polynomial[1].coefficient, r_polynomial[0].coefficient);
         }
         _ => (),

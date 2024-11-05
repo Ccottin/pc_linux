@@ -2,7 +2,6 @@
 pub struct Term {
     pub coefficient: f64,
     pub exposant: isize, //if 0 == coeff * 1
-    pub x: bool,
 }
 
 impl Term {
@@ -10,14 +9,12 @@ impl Term {
         Term {
             coefficient: origin.coefficient.unwrap(),
             exposant: origin.exposant.unwrap(),
-            x: origin.x,
         }
     }
-    pub fn add(exposant: isize, x: bool) -> Term {
+    pub fn add(exposant: isize) -> Term {
         Term {
             coefficient: 0.0,
             exposant: exposant,
-            x: x,
         }
     }
 }

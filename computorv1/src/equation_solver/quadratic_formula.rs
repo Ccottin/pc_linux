@@ -1,4 +1,3 @@
-use crate::term::Term;
 use crate::print_results;
 
 // we use Heron algorithm ; xn+1 = 1/2 * (xn + S/xn)
@@ -14,6 +13,7 @@ fn      square_root(s: f64) -> f64 {
 
         if x1 == x {
 
+            //why not use a string to cut it to a certain lenght? if theres a dot
             // x *= 10e9;
             // trunc = x as isize;
             // x = trunc as f64;
@@ -55,7 +55,7 @@ pub fn  use_quadratic_formula(a: f64, b: f64, c: f64) {
 
     // D = b^2 -4ac
     let discriminant = b * b - (4.0 * a * c);
-    println!("disc = {}, squrt = {} == {}", discriminant, square_root(a), a.sqrt());
+    // println!("disc = {}, squrt = {} == {}", discriminant, square_root(a), a.sqrt());
     //uncomment to test square root fn
     // res = (-b +-(sqrt(D)) / 2 * a
     if discriminant < 0.0 {
