@@ -4,7 +4,7 @@ use crate::term::Term;
 
 
 fn handle_digits(base: &[u8], index: &mut usize, term: &mut MutTerm) -> (isize, String) {
-    println!("char = {} ", base[*index] as char);
+    //println!("char = {} ", base[*index] as char);
     match term.coefficient {
         Some(_) => return (-1, "too many coefficient for a term.".to_string()),
         None => {

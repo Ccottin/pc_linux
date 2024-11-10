@@ -1,23 +1,22 @@
 use crate::print_results;
 
 // we use Heron algorithm ; xn+1 = 1/2 * (xn + S/xn)
-// precision is insuficient for large number, so we have to cut at 16 numbers
-//it is not done yet, think about a neet way to handle this
 fn      square_root(s: f64) -> f64 {
     let mut x = s;
     let mut x1;
-    let trunc: isize;
+    let mut trunc: String;
     
+    if s == 0.0 {
+        return s;
+    }
     loop {
         x1 = 0.5 * (x + (s / x));
-
         if x1 == x {
-
-            //why not use a string to cut it to a certain lenght? if theres a dot
-            // x *= 10e9;
-            // trunc = x as isize;
-            // x = trunc as f64;
-            // x /= 10e9;
+            trunc = x1.to_string();
+            if trunc.len() > 15 {
+                trunc.truncate(15);
+                x = trunc.parse().unwrap();
+            }
             return x;
         }
         x = x1;
@@ -38,6 +37,10 @@ fn      negative_discriminant(a: f64, b: f64, discriminant: f64) {
 
 fn      positive_discriminant(a: f64, b: f64, discriminant: f64) {
     let mut res: (f64, f64) = (0.0, 0.0);
+
+    println!("disc = {}, a = {}, b = {}", discriminant, a, b);
+    println!("squrt = {} == {}", square_root(discriminant), discriminant.sqrt());
+
     let disc_sqrt = square_root(discriminant);
 
     if discriminant == 0.0 {
@@ -47,17 +50,22 @@ fn      positive_discriminant(a: f64, b: f64, discriminant: f64) {
     }
     res.0 = (-b + disc_sqrt) / (2.0 * a);
     res.1 = (-b - disc_sqrt) / (2.0 * a);
+    //juste pour enlever le - devant le zero 
+    if res.0 == -0.0 {
+        res.0 = 0.0 }; 
+    if res.1 == -0.0 {
+        res.1 = 0.0 };
     print_results::reals_solutions(res);
 }
 
-// quadratic formula gives us 2 answer according to discriminant : 
+// quadratic formula gives us 2 answer according to discriminant wich is :
+// D = b^2 -4ac
+// then answers are 
+// res = (-b +-(sqrt(D)) / 2 * a
+
 pub fn  use_quadratic_formula(a: f64, b: f64, c: f64) {
 
-    // D = b^2 -4ac
     let discriminant = b * b - (4.0 * a * c);
-    // println!("disc = {}, squrt = {} == {}", discriminant, square_root(a), a.sqrt());
-    //uncomment to test square root fn
-    // res = (-b +-(sqrt(D)) / 2 * a
     if discriminant < 0.0 {
         negative_discriminant(a, b, discriminant);
     } else {

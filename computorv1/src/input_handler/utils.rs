@@ -64,6 +64,9 @@ pub fn get_nb_str(base: &[u8], index: &mut usize) -> (isize, String) {
         ret.push(base[*index] as char);
         *index += 1;
     }
+    if ret.len() > 15 {
+        return (-1, "please provide fiveteen-digits numbers or else, otherwise precision will drop.".to_string());
+    }
     *index -= 1;
     (0, ret)
 }

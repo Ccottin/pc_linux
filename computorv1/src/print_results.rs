@@ -1,5 +1,9 @@
 use crate::term::Term;
 
+pub fn  unvalid_equation() {
+    println!("equation is unvalid, i can't solve");
+}
+
 pub fn  print_reduced_form(reduced_form: &Vec<Term>) {
     let mut reduced_string = String::new();
 
@@ -30,7 +34,7 @@ pub fn  reals_solutions(solution: (f64, f64)) {
     if solution.0 == solution.1 {
         println!("{}", solution.0);
     } else {
-    println!("{}\n{}", solution.0, solution.1);
+        println!("{}\n{}", solution.0, solution.1);
     }
 }
 
