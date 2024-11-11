@@ -1,1 +1,36 @@
-lezgo (8
+find a way for precision drop when Discriminant is too big
+just a warning
+not an error
+just find a way to signal it
+
+X^2 * 0 + 2 * X + 3 = 0
+i thought that I checked if a value == 0, its a first degree?
+maybe i didnt
+i should double checked
+I DID NOT 
+So 
+i should -> check if coeff == 0, get the one bifore
+ect,
+lowest = 0
+
+le soucis avec le bugg precedent = il rentre en conflit avec la resulution
+du pb sur les intervalles infinis: 
+de fait ! 
+soit je ne trouve plus de solutions possible si x = x ; 
+parce que en passant le coeff de l autre cote, il devient 0 et je le supprime
+soit j'ai un bugg ou je n arrive pas a supprimer
+....
+attend
+peut-etre que je peux supprimer les coefs 0 avant
+et ensuite faire la transpo
+mais ducou
+enfin
+si il me reste deux x egaux de chak cote avqnt de transposer
+bin la les solutions sont infinites 
+mais sinon si c pas le cas bah on retire les degres puis bin bon 
+franchement jsp il est tard le cerveau sera plus frais demain
+
+
+
+maybe i should round the shit befor trunc
+in print print_results

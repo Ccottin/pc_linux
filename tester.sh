@@ -15,7 +15,8 @@ echo "
 echo "
 1 + 1 * X ^ 1 + 1 * X ^ 2 = 0"
 ./computorv1/target/debug/computor "1 + 1 * X ^ 1 + 1 * X ^ 2 = 0"
-echo "
+echo " and should be - 0.5 -+ 0.8660254... * i 
+
 = "
 ./computorv1/target/debug/computor " = "
 
@@ -67,3 +68,70 @@ X =X"
 ./computorv1/target/debug/computor "X = X "
 echo "and should be same as X ^ 1 * 0 = 0"
 ./computorv1/target/debug/computor "X ^ 1 * 0 = 0 "
+
+echo "/*********So far so good *********/
+
+
+X ^ 2 + X - 1 = 0"
+./computorv1/target/debug/computor "X ^ 2 + X - 1 = 0"
+echo "and should be 0.61803399, -1.61803399
+
+X^2    + 4 * X + 4 = 1"
+./computorv1/target/debug/computor "X^2    + 4 * X + 4 = 1"
+echo  " and should be -1 , -3
+
+X^2 * 999888654   + 47569842365 * X + 45698756514 = 1"
+./computorv1/target/debug/computor "X^2 * 999888654   + 47569842365 * X + 45698756514 = 1"
+echo  " and should be -46.5942494 , -0.98089025634 (and if this one works OMAGAD)
+
+X^2 * 0.00016487   + 0.012369845 * X + 0.0000000089 = 0"
+./computorv1/target/debug/computor "X^2 * 0.00016487   + 0.012369845 * X + 0.0000000089 = 0"
+echo "and should be −0.00000071, −75.02786972
+
+X^2 * 0 + 2 * X + 3 = 0"
+./computorv1/target/debug/computor "X^2 * 0 + 2 * X + 3 = 0"
+echo "and should be -1.5
+
+X^2 * 2/3 = 1"
+./computorv1/target/debug/computor "X^2 * 2/3 = 1"
+echo "and should b 1.22474487…, −1.22474487...
+
+X^2 * 2/3  + X^1 * 1 / 42 = 25"
+./computorv1/target/debug/computor "X^2 * 2/3  + X^1 * 1 / 42 = 25"
+echo "and shoulder beeer 6.10589325…, −6.14160753...
+
+X ^ 1 * 0 = 3"
+./computorv1/target/debug/computor "X ^ 1 * 0 = 3"
+echo "and should not find a solution. this might get my code broken o/
+
+X ^ 1 * 0 = 3 + X ^ 1 * 0"
+./computorv1/target/debug/computor "X ^ 1 * 0 = 3 + X ^ 1 * 0"
+echo "more test! No solutions!!
+
+X ^ 1 * 0 - 32 = 3 + X ^ 1 * 0"
+./computorv1/target/debug/computor "X ^ 1 * 0 - 32 = 3 + X ^ 1 * 0"
+echo "MOAAAAAAAAAR
+
+X^2 *1  - X^1 * 1.0000001 + 0.0000001 = 0"
+./computorv1/target/debug/computor "X^2 *1  - X^1 * 1.0000001 + 0.0000001 = 0"
+echo " and results should be very closes but not the same
+
+X^2 *1  + X^1 * 0 -1 = 0"
+./computorv1/target/debug/computor "X^2 *1  + X^1 * 0 -1 = 0"
+echo " and should be 1, -1
+
+X^2 *1  + X^1 * -1 + 1/4 = 0"
+./computorv1/target/debug/computor "X^2 *1  - X^1 * 1 + 1/4 = 0"
+echo " and should be 0.5
+
+X^2 * 999999999999999   + 2 * X + 999999999999999 = 0"
+./computorv1/target/debug/computor "X^2 * 999999999999999   + 2 * X + 999999999999999 = 0"
+echo  "and should be −0.000000000000001 − 1.0i, −0.000000000000001 + 1.0i
+
+X^2 * 1 +  X * 999999999999999 + 1= 0"
+./computorv1/target/debug/computor "X^2 * 1 +  X * 999999999999999 + 1= 0"
+echo "and should be −999999999999999, −0.000000000000001
+
+3 = 3"
+./computorv1/target/debug/computor "3 = 3"
+echo "and i have NO IDEA watodo where"
