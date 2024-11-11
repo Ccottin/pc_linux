@@ -46,7 +46,7 @@ pub fn  reduce_equation(polynomial: [Vec<Term>; 2]) -> Vec<Term> {
     if polynomial[0].len() == 1 && polynomial[1].len() == 1 
         && polynomial[0][0].exposant == 0 && polynomial[1][0].exposant == 0 
         && polynomial[0][0].coefficient != polynomial[1][0].coefficient {
-        return reduced_form;
+        return Vec::new();
     }
    
     //we will use a while loop, since a for loop would use immutable ref to reduced_form

@@ -1,7 +1,7 @@
 use crate::term::Term;
 
 pub fn  unvalid_equation() {
-    println!("equation is unvalid, i can't solve");
+    println!("equation is unvalid, I can't solve.");
 }
 
 pub fn  print_reduced_form(reduced_form: &Vec<Term>) {
@@ -30,11 +30,33 @@ pub fn  print_polynomial_degree(degree: isize) {
     }
 }
 
-pub fn  reals_solutions(solution: (f64, f64)) {
-    if solution.0 == solution.1 {
-        println!("{}", solution.0);
+fn      truncate_nb(nb: f64) -> String {
+    let mut ret = nb.to_string();
+
+    if nb < 0.0 {
+        if ret.len() <= 16 {
+            return ret;
+        }
+        ret.truncate(16);
+        ret += "[...]";
     } else {
-        println!("{}\n{}", solution.0, solution.1);
+        if ret.len() <= 15 {
+            return ret;
+        }
+        ret.truncate(15);
+        ret += "[...]";
+    }
+    ret
+}
+
+pub fn  reals_solutions(solution: (f64, f64)) {
+    let to_print0 = truncate_nb(solution.0);
+    let to_print1 = truncate_nb(solution.1);
+    
+    if solution.0 == solution.1 {
+        println!("{}", to_print0);
+    } else {
+        println!("{}\n{}", to_print0, to_print1);
     }
 }
 
@@ -43,7 +65,9 @@ pub fn  unreals_solutions(solution: (String, String)) {
 }
 
 pub fn  one_solution(solution: f64) {
-    println!("The solution is:\n{}", solution.to_string());
+    let to_print0 = truncate_nb(solution);
+
+    println!("The solution is:\n{}", to_print0);
 }
 
 pub fn  print_discriminant(discriminant: isize) {
@@ -56,4 +80,8 @@ pub fn  print_discriminant(discriminant: isize) {
     else {
         println!("Discriminant is strictly positive, the two solutions are:");
     }
+}
+
+pub fn  infinite_solutions() {
+    println!("all real solutions are possible, results interval:\n(+∞. -∞)")
 }

@@ -54,9 +54,16 @@ echo "
 echo "
 X = 42 * X "
 ./computorv1/target/debug/computor "X = 42 * X "
-echo "
+echo "and shoud b 0
+
 0 = 42 * X "
 ./computorv1/target/debug/computor "0 = 42 * X "
 echo "
 1 = 42 * X  + X - X "
 ./computorv1/target/debug/computor "1 = 42 * X  + X - X "
+echo "and should be 0.0238095[...]238095 until dead tear us appart.
+
+X =X"
+./computorv1/target/debug/computor "X = X "
+echo "and should be same as X ^ 1 * 0 = 0"
+./computorv1/target/debug/computor "X ^ 1 * 0 = 0 "

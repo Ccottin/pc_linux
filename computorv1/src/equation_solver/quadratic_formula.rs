@@ -37,10 +37,6 @@ fn      negative_discriminant(a: f64, b: f64, discriminant: f64) {
 
 fn      positive_discriminant(a: f64, b: f64, discriminant: f64) {
     let mut res: (f64, f64) = (0.0, 0.0);
-
-    println!("disc = {}, a = {}, b = {}", discriminant, a, b);
-    println!("squrt = {} == {}", square_root(discriminant), discriminant.sqrt());
-
     let disc_sqrt = square_root(discriminant);
 
     if discriminant == 0.0 {
