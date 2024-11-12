@@ -1,5 +1,6 @@
 use crate::print_results;
 use crate::term::Term;
+use crate::equation_solver::utils;
 
 //function returns index of the elem with matching exposant, or -1 if its not here yet
 fn  search_exposant(to_search: &Vec<Term>, to_find: isize) -> isize {
@@ -37,10 +38,10 @@ fn  merge_sides(left_side: &mut Vec<Term>, right_side: &Vec<Term>) {
         let index = search_exposant(&left_side, right_side[i].exposant);
         if size > 0 && index > -1 {
             left_side[index as usize].coefficient -= right_side[i].coefficient;
-        //    if left_side[index as usize].coefficient == 0.0 {
-          //      left_side.swap_remove(index as usize);
-            //}
-        } else { // if item.coefficient != 0.0 {
+            if left_side[index as usize].coefficient == 0.0 {
+                left_side.swap_remove(index as usize);
+            }
+        } else if item.coefficient != 0.0 {
             to_push = item.clone();
             to_push.coefficient *= -1.0;
             left_side.push(to_push);
@@ -83,6 +84,16 @@ fn  is_solvable(left_side: &Vec<Term>, right_side: &Vec<Term>) -> bool {
     true
 }
 
+fn  are_sides_equals(left_side: &Vec<Term>, right_side: &Vec<Term>) -> bool {
+    for (i, item) in left_side.iter().enumerate() {
+        if item.coefficient != right_side[i].coefficient 
+        || item.exposant != right_side[i].exposant {
+            return false;
+        }
+    }
+    true
+}
+
 pub fn  reduce_equation(polynomial: [Vec<Term>; 2]) -> Vec<Term> {
     let mut left_reduced_form: Vec<Term> = Vec::new();
     let mut right_reduced_form: Vec<Term> = Vec::new();
@@ -95,8 +106,12 @@ pub fn  reduce_equation(polynomial: [Vec<Term>; 2]) -> Vec<Term> {
 
     reduce_side(&polynomial[0], &mut left_reduced_form);
     reduce_side(&polynomial[1], &mut right_reduced_form);
-    if !is_solvable(&left_reduced_form, &right_reduced_form) {
-        return Vec::new();
+
+    if are_sides_equals(&left_reduced_form, &right_reduced_form) {
+        if !is_solvable(&left_reduced_form, &right_reduced_form) {
+            return Vec::new();
+        }
+        print_results::infinite_solutions();
     }
     println!("before merge side = {:?}, {:?}", left_reduced_form, right_reduced_form);
     merge_sides(&mut left_reduced_form, &right_reduced_form);
@@ -112,6 +127,9 @@ pub fn  reduce_equation(polynomial: [Vec<Term>; 2]) -> Vec<Term> {
             y += 1;
             i = y;
         }
+    }
+    for item in left_reduced_form.iter() {
+        utils::check_overflows(item.coefficient);
     }
     print_results::print_reduced_form(&left_reduced_form);
     left_reduced_form

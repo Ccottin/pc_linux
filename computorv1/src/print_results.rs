@@ -34,16 +34,16 @@ fn      truncate_nb(nb: f64) -> String {
     let mut ret = nb.to_string();
 
     if nb < 0.0 {
-        if ret.len() <= 16 {
+        if ret.len() <= ((std::f64::DIGITS) + 1) as usize {
             return ret;
         }
-        ret.truncate(16);
+        ret.truncate(((std::f64::DIGITS) + 1) as usize);
         ret += "[...]";
     } else {
-        if ret.len() <= 15 {
+        if ret.len() <= std::f64::DIGITS as usize {
             return ret;
         }
-        ret.truncate(15);
+        ret.truncate(std::f64::DIGITS as usize);
         ret += "[...]";
     }
     ret
@@ -83,5 +83,9 @@ pub fn  print_discriminant(discriminant: isize) {
 }
 
 pub fn  infinite_solutions() {
-    println!("all real solutions are possible, results interval:\n(+∞. -∞)")
+    println!("all real solutions are possible, results interval:\n(+∞. -∞)");
+}
+
+pub fn  loss_precision() {
+    println!("Warning: one of the coefficient is too big, precision lost could happend.");
 }

@@ -1,4 +1,5 @@
 use crate::term::Term;
+use crate::print_results;
 
 pub fn  add_missing_values(r_polynomial: &mut Vec<Term>) {
     let mut zero: bool = false;
@@ -29,4 +30,20 @@ pub fn      first_degree(r_polynomial: Vec<Term>) -> f64 {
         return result;
     }
     0.0
+}
+
+
+fn  power_i(nb: f64, power: i32) -> f64 {
+    if power == 0 {
+    return 1.0;
+    }
+    nb * power_i(nb, power - 1)
+}
+
+pub fn  check_overflows(nb: f64) {
+    let max_precise_value: f64 = power_i(10.0, std::f64::DIGITS as i32);
+
+        if nb > max_precise_value {
+            print_results::loss_precision();
+        }
 }

@@ -1,4 +1,5 @@
 use crate::print_results;
+use crate::equation_solver::utils;
 
 // we use Heron algorithm ; xn+1 = 1/2 * (xn + S/xn)
 fn      square_root(s: f64) -> f64 {
@@ -23,6 +24,13 @@ fn      square_root(s: f64) -> f64 {
     }
 }
 
+fn  remove_minus(res: &mut (f64, f64)) {
+    if res.0 == -0.0 {
+        res.0 = 0.0 }; 
+    if res.1 == -0.0 {
+        res.1 = 0.0 };
+}
+
 fn      negative_discriminant(a: f64, b: f64, discriminant: f64) {
     let mut res: (String, String) = (String::new(), String::new());
     let ir_disc = discriminant * -1.0;
@@ -30,8 +38,14 @@ fn      negative_discriminant(a: f64, b: f64, discriminant: f64) {
     print_results::print_discriminant(-1);
     let disc_sqrt = square_root(ir_disc);
     let div = 2.0 * a;
-    res.0 = format!("{} + {} * i", -b / div, disc_sqrt / div);
-    res.1 = format!("{} - {} * i", -b / div, disc_sqrt / div);
+
+    if -b/div == 0.0 {
+        res.0 = format!("{} * i", disc_sqrt / div);
+        res.1 = format!("{} * i", disc_sqrt / div);
+    } else {
+        res.0 = format!("{} + {} * i", -b / div, disc_sqrt / div);
+       res.1 = format!("{} - {} * i", -b / div, disc_sqrt / div);
+    }
     print_results::unreals_solutions(res);
 }
 
@@ -46,11 +60,8 @@ fn      positive_discriminant(a: f64, b: f64, discriminant: f64) {
     }
     res.0 = (-b + disc_sqrt) / (2.0 * a);
     res.1 = (-b - disc_sqrt) / (2.0 * a);
-    //juste pour enlever le - devant le zero 
-    if res.0 == -0.0 {
-        res.0 = 0.0 }; 
-    if res.1 == -0.0 {
-        res.1 = 0.0 };
+
+    remove_minus(&mut res);
     print_results::reals_solutions(res);
 }
 
@@ -60,8 +71,12 @@ fn      positive_discriminant(a: f64, b: f64, discriminant: f64) {
 // res = (-b +-(sqrt(D)) / 2 * a
 
 pub fn  use_quadratic_formula(a: f64, b: f64, c: f64) {
+    let v1 = b * b;
+    let v2 = 4.0 * a * c;
 
-    let discriminant = b * b - (4.0 * a * c);
+    utils::check_overflows(v1);
+    utils::check_overflows(v2);
+    let discriminant = v1 - v2;
     if discriminant < 0.0 {
         negative_discriminant(a, b, discriminant);
     } else {
